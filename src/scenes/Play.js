@@ -46,6 +46,7 @@ class Play extends Phaser.Scene {
 
         // initialize score
         this.p1Score = 0;
+        if (multiPlayer === true) this.p2Score = 0
 
         // display score
         let scoreConfig = {
