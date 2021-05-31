@@ -8,7 +8,7 @@ class Play extends Phaser.Scene {
         this.load.image('rocket', './assets/rocket.png');
         this.load.image('spaceship', './assets/spaceship.png');
         this.load.image('starfield', './assets/starfield.png');
-        this.load.image('dropship', './assets/dropship.png');
+        this.load.image('dropship', './assets/orangeman.png');
 
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', { frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9 });
@@ -32,7 +32,7 @@ class Play extends Phaser.Scene {
             this.ship02 = new Spaceship(this, game.config.width + borderUISize * 3, borderUISize * 5 + borderPadding * 2, 'spaceship', 0, 20).setOrigin(0, 0);
             this.ship03 = new Spaceship(this, game.config.width, borderUISize * 6 + borderPadding * 4, 'spaceship', 0, 10).setOrigin(0, 0);
             this.dropship = new Spaceship(this, game.config.width + borderUISize * 6, borderUISize * 4, 'dropship', 0, 50).setOrigin(0, 0);
-
+            this.dropship.setScale(0.7);
             // define keys
             keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
             keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
@@ -92,19 +92,27 @@ class Play extends Phaser.Scene {
             this.ship02.update();
             this.ship03.update();
         }
+        if(flag) 
+        {
+         this.sound.play('sfx_dropship_enter');
+         flag = false;
+        }
         // check collision
         if (this.checkCollision(this.p1Rocket, this.ship03)) {
             this.p1Rocket.reset();
             this.shipExplode(this.ship03);
+            this.sound.play('sfx_explosion');
         }
         if (this.checkCollision(this.p1Rocket, this.ship02)) {
             this.p1Rocket.reset();
             this.shipExplode(this.ship02);
+            this.sound.play('sfx_explosion');
 
         }
         if (this.checkCollision(this.p1Rocket, this.dropship)) {
             this.p1Rocket.reset();
             this.shipExplode(this.dropship);
+            this.sound.play('sfx_dropship_explosion');
         }
     }
 
@@ -134,8 +142,6 @@ class Play extends Phaser.Scene {
         // score add and repaint
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
-
-        this.sound.play('sfx_explosion');
     }
 
 }
