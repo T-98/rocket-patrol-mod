@@ -14,6 +14,7 @@ class Play extends Phaser.Scene {
         this.load.spritesheet('explosion', './assets/explosion.png', { frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9 });
     }
     create() {
+            this.explosionarr = ['sfx_explosion1', 'sfx_explosion2', 'sfx_explosion3', 'sfx_explosion4'];
             let scene = this;
             // place tile sprite
             this.starfield = this.add.tileSprite(0, 0, 1280, 720, 'starfield').setOrigin(0, 0);
@@ -108,18 +109,20 @@ class Play extends Phaser.Scene {
         if (this.checkCollision(this.p1Rocket, this.ship03)) {
             this.p1Rocket.reset();
             this.shipExplode(this.ship03);
-            this.sound.play('sfx_explosion');
+            let i = this.getRandomIntInclusive(0, 3);
+            this.sound.play(this.explosionarr[i]);
         }
         if (this.checkCollision(this.p1Rocket, this.ship02)) {
             this.p1Rocket.reset();
             this.shipExplode(this.ship02);
-            this.sound.play('sfx_explosion');
-
+            let i = this.getRandomIntInclusive(0, 3);
+            this.sound.play(this.explosionarr[i]);
         }
         if (this.checkCollision(this.p1Rocket, this.ship01)) {
             this.p1Rocket.reset();
             this.shipExplode(this.ship01);
-            this.sound.play('sfx_explosion');
+            let i = this.getRandomIntInclusive(0, 3);
+            this.sound.play(this.explosionarr[i]);
         }
         if (this.dropship != undefined) {
             if (this.checkCollision(this.p1Rocket, this.dropship)) {
@@ -174,6 +177,12 @@ class Play extends Phaser.Scene {
         this.time.delayedCall(1000, () => {
             txt.destroy();
         });
+    }
+
+    getRandomIntInclusive(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
 }
