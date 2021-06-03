@@ -6,7 +6,7 @@ let config = {
 }
 
 // reserve keyboard vars
-let keyF, keyR, keyLEFT, keyRIGHT, keyUP, keyDOWN;
+let keyF, keyR, keyC, keyLEFT, keyRIGHT, keyUP, keyDOWN;
 
 let game = new Phaser.Game(config);
 
@@ -15,4 +15,5 @@ let borderUISize = game.config.height / 15;
 let borderPadding = borderUISize / 3;
 
 let multiPlayer = false;
+let currentPlayer = "Player 1";
 let flag = true;
