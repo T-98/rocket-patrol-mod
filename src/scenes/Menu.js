@@ -56,6 +56,10 @@ class Menu extends Phaser.Scene {
     }
 
     update() {
+        if (Phaser.Input.Keyboard.JustDown(keyUP)) {
+            multiPlayer = false;
+            this.sound.play('sfx_select');
+        }
         if (Phaser.Input.Keyboard.JustDown(keyDOWN)) {
             multiPlayer = true;
             this.sound.play('sfx_select');

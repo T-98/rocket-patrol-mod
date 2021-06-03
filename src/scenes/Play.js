@@ -1,3 +1,17 @@
+// global display score box
+let scoreConfig = {
+    fontFamily: 'Courier',
+    fontSize: '28px',
+    backgroundColor: '#F3B141',
+    color: '#843605',
+    align: 'left',
+    padding: {
+        top: 5,
+        bottom: 5,
+    },
+    fixedWidth: 240
+}
+
 class Play extends Phaser.Scene {
     constructor() {
         super("playScene")
@@ -57,36 +71,33 @@ class Play extends Phaser.Scene {
             this.p1Score = 0;
             if (multiPlayer === true) this.p2Score = 0;
 
-            // display score
-            let scoreConfig = {
-                fontFamily: 'Courier',
-                fontSize: '28px',
-                backgroundColor: '#F3B141',
-                color: '#843605',
-                align: 'left',
-                padding: {
-                    top: 5,
-                    bottom: 5,
-                },
-                fixedWidth: 240
-            }
             this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding * 2, currentPlayer + ': ' + (currentPlayer === "Player 1" ? this.p1Score : this.p2Score), scoreConfig);
-
+            this.gameTime = this.add.text(game.config.width / 2, borderUISize + borderPadding * 2, "0", { fontFamily: 'Courier', fontSize: '28px', backgroundColor: '#F3B141', color: '#843605' });
             // GAME OVER flag
             this.gameOver = false;
-
+            this.gameOverTime = game.settings.gameTimer;
+            this.startTime = scene.time.now;
             //play clock
             scoreConfig.fixedWidth = 0;
-            this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
-                this.add.text(game.config.width / 2, game.config.height / 2, 'GAME OVER ' + currentPlayer, scoreConfig).setOrigin(0.5);
-                this.add.text(game.config.width / 2, game.config.height / 2 + 64, 'Press (C) to continue, (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
-                this.gameOver = true;
+            this.gameTime.setAlpha(1);
+            this.clock = this.time.delayedCall(game.settings.gameTimer / 2, () => {
+                game.settings.spaceshipSpeed += 0.5;
+                game.settings.rocketSpeed += 1;
             }, null, this);
         }
         //swap players, keep scores
     update() {
+        this.gameTime.text = Math.floor((this.gameOverTime - (this.time.now - this.startTime)) / 1000);
+        if (this.time.now - this.startTime > this.gameOverTime) {
+            this.add.text(game.config.width / 2, game.config.height / 2, 'GAME OVER ' + currentPlayer, scoreConfig).setOrigin(0.5);
+            if (multiPlayer === false) this.add.text(game.config.width / 2, game.config.height / 2 + 64, 'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
+            else this.add.text(game.config.width / 2, game.config.height / 2 + 64, 'Press (C) to continue, (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
+            this.gameOver = true;
+            this.gameTime.setAlpha(0);
+            this.gameOverTime = game.settings.gameTimer;
+        }
         // check key input for restart
-        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyC)) {
+        if (this.gameOver && multiPlayer === true && Phaser.Input.Keyboard.JustDown(keyC)) {
             if (currentPlayer === "Player 1") currentPlayer = "Player 2";
             else currentPlayer = "Player 1";
             this.scene.restart();
@@ -159,8 +170,8 @@ class Play extends Phaser.Scene {
             boom.destroy(); // remove explosion sprite
             this.displayMessage("+1 sec", X, Y);
         });
-        //add timer: if dropship is hit, add 2 secs otherwise add 1 sec for every hit
-        ++game.settings.gameTimer;
+        //add timer: 1 sec for every hit
+        this.gameOverTime += 1000;
         // score add and repaint
         if (currentPlayer === "Player 1") {
             this.p1Score += ship.points;
