@@ -11,6 +11,7 @@ let scoreConfig = {
     },
     fixedWidth: 240
 }
+let currentScore;
 
 class Play extends Phaser.Scene {
     constructor() {
@@ -19,8 +20,9 @@ class Play extends Phaser.Scene {
 
     preload() {
         // load images/tile sprites
-        this.load.image('rocket', './assets/rocket.png');
-        this.load.image('spaceship', './assets/spaceship.png');
+        this.load.image('rocket', './assets/rocket_.png');
+        this.load.image('spaceship1', './assets/spaceship1.png');
+        this.load.image('spaceship', './assets/spaceship.png')
         this.load.image('starfield', './assets/starfield.png');
         this.load.image('dropship', './assets/orangeman.png');
 
@@ -44,7 +46,7 @@ class Play extends Phaser.Scene {
             this.p1Rocket = new Rocket(this, game.config.width / 2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
 
             // add spaceships (x3)
-            this.ship01 = new Spaceship(this, game.config.width + borderUISize * 6, borderUISize * 4, 'spaceship', 0, 30).setOrigin(0, 0);
+            this.ship01 = new Spaceship(this, game.config.width + borderUISize * 6, borderUISize * 4, 'spaceship1', 0, 30).setOrigin(0, 0);
             this.ship02 = new Spaceship(this, game.config.width + borderUISize * 3, borderUISize * 5 + borderPadding * 2, 'spaceship', 0, 20).setOrigin(0, 0);
             this.ship03 = new Spaceship(this, game.config.width, borderUISize * 6 + borderPadding * 4, 'spaceship', 0, 10).setOrigin(0, 0);
             this.time.delayedCall(game.settings.gameTimer / 2, () => {
@@ -81,8 +83,8 @@ class Play extends Phaser.Scene {
             scoreConfig.fixedWidth = 0;
             this.gameTime.setAlpha(1);
             this.clock = this.time.delayedCall(game.settings.gameTimer / 2, () => {
-                game.settings.spaceshipSpeed += 0.5;
-                game.settings.rocketSpeed += 1;
+                game.settings.spaceshipSpeed += 1;
+                game.settings.rocketSpeed += 1.5;
             }, null, this);
         }
         //swap players, keep scores
@@ -93,6 +95,13 @@ class Play extends Phaser.Scene {
             if (multiPlayer === false) this.add.text(game.config.width / 2, game.config.height / 2 + 64, 'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
             else this.add.text(game.config.width / 2, game.config.height / 2 + 64, 'Press (C) to continue, (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
+            if(multiPlayer)
+            {
+                if(this.p1Score > currentScore)currentScore = this.p1Score;
+                else currentScore = this.p2Score;
+            }
+            else currentScore = this.p1Score;
+            if(highScore == 0 || currentScore > highScore) highScore = currentScore;
             this.gameTime.setAlpha(0);
             this.gameOverTime = game.settings.gameTimer;
         }

@@ -17,3 +17,4 @@ let borderPadding = borderUISize / 3;
 let multiPlayer = false;
 let currentPlayer = "Player 1";
 let flag = true;
+let highScore = 0;
