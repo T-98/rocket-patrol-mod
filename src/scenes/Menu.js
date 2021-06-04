@@ -29,7 +29,7 @@ class Menu extends Phaser.Scene {
                 fixedWidth: 0
             }
             //show menu text
-        this.add.text(game.config.width / 2, game.config.height / 2 - borderUISize -
+        this.add.text(game.config.width / 2, game.config.height / 2.3 - borderUISize -
             borderPadding, 'ROCKET PATROL', menuConfig).setOrigin(0.5);
 
         //adding select # of players option
@@ -47,6 +47,11 @@ class Menu extends Phaser.Scene {
         menuConfig.color = "#000";
         this.add.text(game.config.width / 2, game.config.height / 1.9 + borderUISize +
             borderPadding, 'Press ← for Novice or → for Expert', menuConfig).setOrigin(0.5);
+        menuConfig.backgroundColor = '#F3B141';
+
+        menuConfig.color = "#843605";
+        this.add.text(game.config.width / 2, game.config.height / 3 + borderUISize +
+            borderPadding, 'HIGH SCORE: ' + highScore, menuConfig).setOrigin(0.5);
 
         // define keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
